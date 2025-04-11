@@ -5,13 +5,15 @@ import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import Tooltip from "@/components/Tooltip";
+import { useGetPosts } from "@/hooks/posts";
 
 export default function Home() {
+  const { data: postsData } = useGetPosts();
   const { data: session } = useSession();
   if (session) {
     return (
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <main className="max-w-sm mx-auto flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        <main className="w-lg mx-auto flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
           <div className="flex items-center justify-between w-full">
             <h1>Hi {session.user?.name}</h1>
             <Tooltip text="Sign Out">
@@ -33,24 +35,20 @@ export default function Home() {
             />
             <Tiptap />
           </div>
-          <Post
-            image="https://pagedone.io/asset/uploads/1704092147.png"
-            name="Hailey Garza"
-            description="added new tags to Ease Design System"
-            time="Friday, 10:03 AM"
-          />
-          <Post
-            image="https://pagedone.io/asset/uploads/1704092147.png"
-            name="Hailey Garza"
-            description="added new tags to Ease Design System"
-            time="Friday, 10:03 AM"
-          />
-          <Post
-            image="https://pagedone.io/asset/uploads/1704092147.png"
-            name="Hailey Garza"
-            description="added new tags to Ease Design System"
-            time="Friday, 10:03 AM"
-          />
+          {postsData?.map((post) => (
+            <Post
+              key={post.id}
+              image={post.imageUrl}
+              name={post.user.name}
+              content={post.content}
+              time={new Date(post.createdAt).toLocaleString('en-US', {
+                weekday: 'long',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+              })}
+            />
+          ))}
         </main>
       </div>
     );
