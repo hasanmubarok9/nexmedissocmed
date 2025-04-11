@@ -34,8 +34,10 @@ body {
 }
 
 .ProseMirror {
-  border: 1px solid #e0e0e0;
   outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
   padding: 10px;
 }
 
