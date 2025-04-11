@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -11,7 +12,15 @@ import { PhotoIcon } from "@heroicons/react/24/outline";
 
 const limit = 100;
 
+const uploadImage = async (file: File): Promise<string> => {
+    // Replace with real upload logic (e.g., to S3, Cloudinary)
+    await new Promise((r) => setTimeout(r, 1000));
+    return URL.createObjectURL(file); // Mock: just local blob
+  };
+
 export default function Tiptap() {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const editor = useEditor({
     extensions: [
       Paragraph,
@@ -30,6 +39,16 @@ export default function Tiptap() {
   const percentage = editor
     ? Math.round((100 / limit) * editor.storage.characterCount.characters())
     : 0;
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file || !editor) return;
+
+    const url = await uploadImage(file);
+    editor.chain().focus().setImage({ src: url }).run();
+  };
 
   if (!editor) return null;
 
@@ -60,9 +79,21 @@ export default function Tiptap() {
           </svg>
           {editor.storage.characterCount.characters()} / {limit} characters
         </div>
-        <button className="bg-gray-100 p-1 cursor-pointer rounded-md">
-          <PhotoIcon className="w-6 h-6" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            className="bg-gray-100 p-1 cursor-pointer rounded-md"
+            onClick={() => inputRef.current?.click()}
+          >
+            <PhotoIcon className="w-6 h-6" />
+          </button>
+          <input
+            ref={inputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageUpload}
+          />
+        </div>
       </div>
     </div>
   );
