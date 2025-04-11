@@ -13,7 +13,7 @@ export default function Post({
   content: string;
 }) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 px-4">
       <div className="flex items-center gap-3">
         <Image
           src="https://pagedone.io/asset/uploads/1704092147.png"
@@ -39,7 +39,7 @@ export default function Post({
         </div>
       </div>
       <div>
-        <p className="text-black text-md font-normal leading-snug pb-0.5">
+        <p className="text-black text-md font-medium leading-snug pb-0.5">
           {content}
         </p>
       </div>
