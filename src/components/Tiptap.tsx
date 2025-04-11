@@ -9,6 +9,7 @@ import Text from "@tiptap/extension-text";
 import Placeholder from "@tiptap/extension-placeholder";
 import CharacterCount from "@tiptap/extension-character-count";
 import { PhotoIcon } from "@heroicons/react/24/outline";
+import Tooltip from "./Tooltip";
 
 const limit = 100;
 
@@ -86,19 +87,21 @@ export default function Tiptap() {
           {editor.storage.characterCount.characters()} / {limit} characters
         </div>
         <div className="flex items-center gap-2">
-          <button
-            className="bg-gray-100 p-1 cursor-pointer rounded-md"
-            onClick={() => inputRef.current?.click()}
-          >
-            <PhotoIcon className="w-6 h-6" />
-          </button>
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageUpload}
-          />
+          <Tooltip text="Upload Image">
+            <button
+              className="bg-gray-100 p-1 cursor-pointer rounded-md"
+              onClick={() => inputRef.current?.click()}
+            >
+              <PhotoIcon className="w-6 h-6" />
+            </button>
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageUpload}
+            />
+          </Tooltip>
         </div>
       </div>
     </div>
