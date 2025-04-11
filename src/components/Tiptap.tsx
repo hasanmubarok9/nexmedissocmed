@@ -13,10 +13,10 @@ import { PhotoIcon } from "@heroicons/react/24/outline";
 const limit = 100;
 
 const uploadImage = async (file: File): Promise<string> => {
-    // Replace with real upload logic (e.g., to S3, Cloudinary)
-    await new Promise((r) => setTimeout(r, 1000));
-    return URL.createObjectURL(file); // Mock: just local blob
-  };
+  // Replace with real upload logic (e.g., to S3, Cloudinary)
+  await new Promise((r) => setTimeout(r, 1000));
+  return URL.createObjectURL(file); // Mock: just local blob
+};
 
 export default function Tiptap() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -47,7 +47,13 @@ export default function Tiptap() {
     if (!file || !editor) return;
 
     const url = await uploadImage(file);
-    editor.chain().focus().setImage({ src: url }).run();
+    editor
+      .chain()
+      .focus()
+      .setImage({ src: url })
+      .createParagraphNear()
+      .focus()
+      .run();
   };
 
   if (!editor) return null;
