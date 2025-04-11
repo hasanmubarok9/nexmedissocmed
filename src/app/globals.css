@@ -38,6 +38,23 @@ body {
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: break-word;
-  padding: 10px;
+}
+
+.character-count {
+  align-items: center;
+  color: var(--gray-5);
+  display: flex;
+  font-size: 0.75rem;
+  gap: .5rem;
+  margin-top: 1rem;
+
+  svg {
+    color: var(--purple);
+  }
+
+  &--warning,
+  &--warning svg {
+    color: var(--red);
+  }
 }
 
