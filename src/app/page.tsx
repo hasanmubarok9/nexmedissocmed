@@ -68,6 +68,7 @@ export default function Home() {
               name={post.user.name}
               content={post.content}
               comments={post.comments}
+              likes={post.likes}
               time={formatTime(post.createdAt)}
             />
           ))}

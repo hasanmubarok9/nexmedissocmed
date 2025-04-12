@@ -1,15 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { fetchData } from "@/utils/api";
-
-export type Comment = {
-  id: string;
-  content: string;
-  createdAt: string;
-  user: {
-    id: string;
-    name: string;
-  };  
-};
+import { Like } from "@/hooks/likes";
+import { Comment } from "@/hooks/comments";
 
 type Post = {
   id: number;
@@ -23,6 +15,7 @@ type Post = {
     name: string;
   };
   comments: Comment[];
+  likes: Like[];
 };
 
 export const useGetPosts = () => {

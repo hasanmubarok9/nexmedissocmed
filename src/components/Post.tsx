@@ -2,8 +2,9 @@ import { useRef } from "react";
 import Image from "next/image";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import PostDetail from "./PostDetail";
-import { Comment } from "@/hooks/posts";
+import { Comment } from "@/hooks/comments";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
+import { Like } from "@/hooks/likes";
 
 export default function Post({
   image,
@@ -12,12 +13,14 @@ export default function Post({
   content,
   comments,
   postId,
+  likes,
 }: {
   image: string;
   name: string;
   time: string;
   content: string;
   comments: Comment[];
+  likes: Like[];
   postId: number;
 }) {
   const postDetailRef = useRef<any>(null);
@@ -42,20 +45,30 @@ export default function Post({
         </div>
       </div>
       <div>
-        <img src={image} alt={name} />        
+        <img src={image} alt={name} />
       </div>
       <div className="flex flex-col gap-1">
         <p className="text-gray-900 text-sm font-normal leading-snug pb-0.5">
           {content}
         </p>
         <div className="flex items-center gap-2">
-          <HeartIcon className="w-6 h-6" />
+          <button
+            onClick={() => {}}
+            className="cursor-pointer inline-flex items-center justify-center h-10 gap-2 text-sm font-medium tracking-wide transition duration-300 rounded whitespace-nowrap focus-visible:outline-none disabled:cursor-not-allowed disabled:shadow-none"
+          >
+            <HeartIcon className="w-6 h-6" />
+          </button>
           <button
             onClick={() => postDetailRef.current.openModal()}
             className="cursor-pointer inline-flex items-center justify-center h-10 gap-2 text-sm font-medium tracking-wide transition duration-300 rounded whitespace-nowrap focus-visible:outline-none disabled:cursor-not-allowed disabled:shadow-none"
           >
             <ChatBubbleOvalLeftIcon className="w-6 h-6" />
           </button>
+        </div>
+        <div>
+          <p className="text-gray-900 text-sm font-medium leading-snug pb-0.5">
+            {likes.length} likes
+          </p>
         </div>
       </div>
       <div>
