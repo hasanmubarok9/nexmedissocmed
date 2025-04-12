@@ -6,6 +6,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import Tooltip from "@/components/Tooltip";
 import { useGetPosts } from "@/hooks/posts";
+import PostDetail from "@/components/PostDetail";
 
 export default function Home() {
   const { data: postsData } = useGetPosts();
@@ -51,6 +52,7 @@ export default function Home() {
               })}
             />
           ))}
+          <PostDetail />
         </main>
       </div>
     );
