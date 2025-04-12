@@ -1,8 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { fetchData } from "@/utils/api";
 
 export const usePostComment = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["comments/postComment"],
     mutationFn: (comment: {

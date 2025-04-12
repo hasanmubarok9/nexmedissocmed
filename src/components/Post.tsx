@@ -1,7 +1,9 @@
+import { useRef } from "react";
 import Image from "next/image";
 import { HeartIcon } from "@heroicons/react/24/outline";
 import PostDetail from "./PostDetail";
 import { Comment } from "@/hooks/posts";
+import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 
 export default function Post({
   image,
@@ -18,6 +20,8 @@ export default function Post({
   comments: Comment[];
   postId: number;
 }) {
+  const postDetailRef = useRef<any>(null);
+
   return (
     <div className="flex flex-col gap-2 px-4">
       <div className="flex items-center gap-3">
@@ -41,14 +45,12 @@ export default function Post({
         <img src={image} alt={name} />
         <div className="flex items-center gap-2">
           <HeartIcon className="w-6 h-6" />
-          <PostDetail
-            postId={postId}
-            image={image}
-            content={content}
-            name={name}
-            time={time}
-            comments={comments}
-          />
+          <button
+            onClick={() => postDetailRef.current.openModal()}
+            className="cursor-pointer inline-flex items-center justify-center h-10 gap-2 text-sm font-medium tracking-wide transition duration-300 rounded whitespace-nowrap focus-visible:outline-none disabled:cursor-not-allowed disabled:shadow-none"
+          >
+            <ChatBubbleOvalLeftIcon className="w-6 h-6" />
+          </button>
         </div>
       </div>
       <div>
@@ -57,10 +59,22 @@ export default function Post({
         </p>
       </div>
       <div>
-        <button className="cursor-pointer text-gray-500 text-sm font-normal leading-snug pb-0.5">
+        <button
+          onClick={() => postDetailRef.current.openModal()}
+          className="cursor-pointer text-gray-500 text-sm font-normal leading-snug pb-0.5"
+        >
           View {comments.length} comments
         </button>
       </div>
+      <PostDetail
+        postId={postId}
+        image={image}
+        content={content}
+        name={name}
+        time={time}
+        comments={comments}
+        ref={postDetailRef}
+      />
     </div>
   );
 }

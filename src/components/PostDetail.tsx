@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useImperativeHandle } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import ReactDOM from "react-dom";
 import Image from "next/image";
-import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import { Comment } from "@/hooks/posts";
 import { useSession } from "next-auth/react";
 import { usePostComment } from "@/hooks/comments";
@@ -16,6 +15,7 @@ export default function PostDetail({
   time,
   comments,
   postId,
+  ref
 }: {
   image: string;
   content: string;
@@ -23,6 +23,7 @@ export default function PostDetail({
   time: string;
   comments: Comment[];
   postId: number;
+  ref?: any;
 }) {
   const [isShowing, setIsShowing] = useState(false);
   const { mutate: postComment } = usePostComment();
@@ -31,6 +32,10 @@ export default function PostDetail({
   const tiptapRef = useRef<any>(null);
 
   const queryClient = useQueryClient();
+
+  useImperativeHandle(ref, () => ({
+    openModal: () => setIsShowing(true),
+  }));
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -124,14 +129,7 @@ export default function PostDetail({
   }, [isShowing]);
 
   return (
-    <>
-      <button
-        onClick={() => setIsShowing(true)}
-        className="cursor-pointer inline-flex items-center justify-center h-10 gap-2 text-sm font-medium tracking-wide transition duration-300 rounded whitespace-nowrap focus-visible:outline-none disabled:cursor-not-allowed disabled:shadow-none"
-      >
-        <ChatBubbleOvalLeftIcon className="w-6 h-6" />
-      </button>
-
+    <>      
       {isShowing && typeof document !== "undefined"
         ? ReactDOM.createPortal(
             <div
