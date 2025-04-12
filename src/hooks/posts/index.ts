@@ -1,6 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@/utils/api";
 
+export type Comment = {
+  id: string;
+  content: string;
+  createdAt: string;
+  user: {
+    id: string;
+    name: string;
+  };  
+};
+
 type Post = {
   id: string;
   imageUrl: string;
@@ -12,6 +22,7 @@ type Post = {
     id: string;
     name: string;
   };
+  comments: Comment[];
 };
 
 export const useGetPosts = () => {

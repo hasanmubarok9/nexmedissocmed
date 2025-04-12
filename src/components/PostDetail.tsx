@@ -2,17 +2,21 @@ import React, { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 import Image from "next/image";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
+import { Comment } from "@/hooks/posts";
+import { formatTime } from "@/utils/time";
 
-export default function ModalBasic({
+export default function PostDetail({
   image,
   content,
   name,
   time,
+  comments,
 }: {
   image: string;
   content: string;
   name: string;
   time: string;
+  comments: Comment[];
 }) {
   const [isShowing, setIsShowing] = useState(false);
 
@@ -144,27 +148,53 @@ export default function ModalBasic({
                       style={{ objectFit: "cover" }}
                     />
                   </div>
-                  <div className="w-1/3 p-4">
-                    <div className="flex items-center gap-3 mb-4">
-                      <Image
-                        src="https://pagedone.io/asset/uploads/1704092147.png"
-                        alt="profile picture"
-                        className="w-12 h-12"
-                        width={48}
-                        height={48}
-                      />
-                      <h2 className="text-gray-900 text-sm font-medium leading-snug pb-0.5">
-                        {name}
-                      </h2>
-                    </div>
+                  <div className="w-1/3 p-4 flex flex-col gap-4">
                     <div>
-                      <p className="text-black text-md font-medium leading-snug pb-0.5">
-                        {content}
-                      </p>
-                      <p className="text-gray-500 text-xs font-normal leading-4">
-                        {time}
-                      </p>
+                      <div className="flex items-center gap-3 mb-4">
+                        <Image
+                          src="https://pagedone.io/asset/uploads/1704092147.png"
+                          alt="profile picture"
+                          className="w-12 h-12"
+                          width={48}
+                          height={48}
+                        />
+                        <h2 className="text-gray-900 text-sm font-semibold leading-snug pb-0.5">
+                          {name}
+                        </h2>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <p className="text-gray-900 text-md font-normal leading-snug">
+                          {content}
+                        </p>
+                        <p className="text-gray-500 text-xs font-normal leading-4">
+                          {time}
+                        </p>
+                      </div>
                     </div>
+                    {comments.map((comment) => (
+                      <div key={comment.id} className="flex gap-4">
+                        <div className="flex items-center gap-3">
+                          <Image
+                            src="https://pagedone.io/asset/uploads/1704092147.png"
+                            alt="profile picture"
+                            className="w-12 h-12"
+                            width={48}
+                            height={48}
+                          />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <p className="text-gray-900 text-sm font-normal leading-snug">
+                            <span className="font-semibold">
+                              {comment.user.name}
+                            </span>{" "}
+                            {comment.content}
+                          </p>
+                          <p className="text-gray-500 text-xs font-normal leading-4">
+                            {formatTime(comment.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

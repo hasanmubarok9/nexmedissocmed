@@ -89,7 +89,7 @@ export default function Tiptap() {
         <div className="flex items-center gap-2">
           <Tooltip text="Upload Image">
             <button
-              className="bg-gray-100 p-1 cursor-pointer rounded-md"
+              className="p-1 cursor-pointer rounded-md"
               onClick={() => inputRef.current?.click()}
             >
               <PhotoIcon className="w-6 h-6" />
