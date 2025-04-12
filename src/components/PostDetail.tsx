@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { usePostComment } from "@/hooks/comments";
 import { formatTime } from "@/utils/time";
 import Tiptap from "./Tiptap";
-
+import { HeartIcon } from "@heroicons/react/24/outline";
 export default function PostDetail({
   image,
   content,
@@ -177,6 +177,7 @@ export default function PostDetail({
                         <p className="text-gray-500 text-xs font-normal leading-4">
                           {time}
                         </p>
+                        <HeartIcon className="w-6 h-6" />
                       </div>
                     </div>
                     <div className="overflow-auto flex-1 flex flex-col gap-4">

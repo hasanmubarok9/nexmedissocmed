@@ -41,8 +41,13 @@ export default function Post({
           </h3>
         </div>
       </div>
+      <div>
+        <img src={image} alt={name} />        
+      </div>
       <div className="flex flex-col gap-1">
-        <img src={image} alt={name} />
+        <p className="text-gray-900 text-sm font-normal leading-snug pb-0.5">
+          {content}
+        </p>
         <div className="flex items-center gap-2">
           <HeartIcon className="w-6 h-6" />
           <button
@@ -52,11 +57,6 @@ export default function Post({
             <ChatBubbleOvalLeftIcon className="w-6 h-6" />
           </button>
         </div>
-      </div>
-      <div>
-        <p className="text-gray-900 text-sm font-normal leading-snug pb-0.5">
-          {content}
-        </p>
       </div>
       <div>
         <button
