@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { HeartIcon, ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import PostDetail from "./PostDetail";
 
 export default function Post({
   image,
@@ -35,7 +36,7 @@ export default function Post({
         <img src={image} alt={name} />
         <div className="flex items-center gap-2">
           <HeartIcon className="w-6 h-6" />
-          <ChatBubbleOvalLeftIcon className="w-6 h-6" />
+          <PostDetail image={image} content={content} name={name} time={time} />
         </div>
       </div>
       <div>

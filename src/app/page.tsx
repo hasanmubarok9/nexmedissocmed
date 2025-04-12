@@ -6,7 +6,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import Tooltip from "@/components/Tooltip";
 import { useGetPosts } from "@/hooks/posts";
-import PostDetail from "@/components/PostDetail";
+import { formatDistanceToNow, subMonths } from "date-fns";
 
 export default function Home() {
   const { data: postsData } = useGetPosts();
@@ -44,15 +44,25 @@ export default function Home() {
               image={post.imageUrl}
               name={post.user.name}
               content={post.content}
-              time={new Date(post.createdAt).toLocaleString("en-US", {
-                weekday: "long",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-              })}
+              time={(() => {
+                const postDate = new Date(post.createdAt);
+                const oneMonthAgo = subMonths(new Date(), 1);
+                
+                if (postDate >= oneMonthAgo) {
+                  return formatDistanceToNow(postDate, {
+                    addSuffix: true,
+                  });
+                } else {
+                  return postDate.toLocaleString("en-US", {
+                    weekday: "long",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  });
+                }
+              })()}
             />
           ))}
-          <PostDetail />
         </main>
       </div>
     );
