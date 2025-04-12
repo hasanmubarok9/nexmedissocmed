@@ -9,12 +9,14 @@ export default function Post({
   time,
   content,
   comments,
+  postId,
 }: {
   image: string;
   name: string;
   time: string;
   content: string;
   comments: Comment[];
+  postId: number;
 }) {
   return (
     <div className="flex flex-col gap-2 px-4">
@@ -40,6 +42,7 @@ export default function Post({
         <div className="flex items-center gap-2">
           <HeartIcon className="w-6 h-6" />
           <PostDetail
+            postId={postId}
             image={image}
             content={content}
             name={name}

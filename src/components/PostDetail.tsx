@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import ReactDOM from "react-dom";
 import Image from "next/image";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import { Comment } from "@/hooks/posts";
+import { useSession } from "next-auth/react";
+import { usePostComment } from "@/hooks/comments";
 import { formatTime } from "@/utils/time";
 import Tiptap from "./Tiptap";
 
@@ -12,16 +15,22 @@ export default function PostDetail({
   name,
   time,
   comments,
+  postId,
 }: {
   image: string;
   content: string;
   name: string;
   time: string;
   comments: Comment[];
+  postId: number;
 }) {
   const [isShowing, setIsShowing] = useState(false);
-
+  const { mutate: postComment } = usePostComment();
+  const { data: session } = useSession();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const tiptapRef = useRef<any>(null);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -200,8 +209,23 @@ export default function PostDetail({
                     </div>
                     <div className="">
                       <Tiptap
+                        ref={tiptapRef}
                         placeholder="Add a comment..."
                         isUploadImage={false}
+                        onSubmit={(content) => {
+                          postComment({
+                            postId: postId,
+                            content: content,
+                            userId: 2, // TODO: get user id from session
+                          }, {
+                            onSuccess: () => {
+                              tiptapRef.current.clearContent();
+                              queryClient.invalidateQueries({
+                                queryKey: ["posts/getPosts"],
+                              });
+                            },
+                          });
+                        }}
                       />
                     </div>
                   </div>

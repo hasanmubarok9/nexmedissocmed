@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useImperativeHandle, useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -8,7 +8,7 @@ import Image from "@tiptap/extension-image";
 import Text from "@tiptap/extension-text";
 import Placeholder from "@tiptap/extension-placeholder";
 import CharacterCount from "@tiptap/extension-character-count";
-import { PhotoIcon } from "@heroicons/react/24/outline";
+import { PhotoIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import Tooltip from "./Tooltip";
 
 const limit = 100;
@@ -21,12 +21,20 @@ const uploadImage = async (file: File): Promise<string> => {
 
 export default function Tiptap({
   placeholder,
-  isUploadImage = false,
+  isUploadImage = true,
+  onSubmit,
+  ref,
 }: {
   placeholder?: string;
   isUploadImage?: boolean;
+  onSubmit?: (content: string) => void;
+  ref?: any;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    clearContent: () => editor?.commands.clearContent(),
+  }));
 
   const editor = useEditor({
     extensions: [
@@ -67,8 +75,39 @@ export default function Tiptap({
 
   return (
     <div className="w-full">
-      <EditorContent editor={editor} className="w-full text-gray-900 font-normal leading-snug" />
-      <div className="flex items-center justify-between mt-2">
+      <div className="flex items-center gap-2">
+        <EditorContent
+          editor={editor}
+          className="w-full text-gray-900 font-normal leading-snug"
+        />
+        <button
+          disabled={editor.storage.characterCount.characters() === 0}
+          className="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-gray-500 text-sm font-normal leading-snug pb-0.5"
+          onClick={() => onSubmit?.(editor.getText())}
+        >
+          <PaperAirplaneIcon className="w-6 h-6" />
+        </button>
+      </div>
+      <div className="flex items-center gap-2 mt-2">
+        {isUploadImage && (
+          <div className="flex items-center gap-2">
+            <Tooltip text="Upload Image">
+              <button
+                className="p-1 cursor-pointer rounded-md"
+                onClick={() => inputRef.current?.click()}
+              >
+                <PhotoIcon className="w-6 h-6" />
+              </button>
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+            </Tooltip>
+          </div>
+        )}
         <div
           className={`character-count ${
             editor.storage.characterCount.characters() === limit
@@ -92,25 +131,6 @@ export default function Tiptap({
           </svg>
           {editor.storage.characterCount.characters()} / {limit} characters
         </div>
-        {isUploadImage && (
-          <div className="flex items-center gap-2">
-            <Tooltip text="Upload Image">
-              <button
-                className="p-1 cursor-pointer rounded-md"
-                onClick={() => inputRef.current?.click()}
-              >
-                <PhotoIcon className="w-6 h-6" />
-              </button>
-              <input
-                ref={inputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageUpload}
-              />
-            </Tooltip>
-          </div>
-        )}
       </div>
     </div>
   );

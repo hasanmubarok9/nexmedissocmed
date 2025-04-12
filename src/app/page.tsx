@@ -43,6 +43,7 @@ export default function Home() {
           {postsData?.map((post) => (
             <Post
               key={post.id}
+              postId={post.id}
               image={post.imageUrl}
               name={post.user.name}
               content={post.content}

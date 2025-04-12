@@ -12,14 +12,14 @@ export type Comment = {
 };
 
 type Post = {
-  id: string;
+  id: number;
   imageUrl: string;
   content: string;
   createdAt: string;
   updatedAt: string;
-  userId: string;
+  userId: number;
   user: {
-    id: string;
+    id: number;
     name: string;
   };
   comments: Comment[];
