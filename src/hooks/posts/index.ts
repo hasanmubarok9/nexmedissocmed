@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { fetchData } from "@/utils/api";
 
 export type Comment = {
@@ -29,6 +29,17 @@ export const useGetPosts = () => {
   return useQuery<Post[]>({
     queryKey: ["posts/getPosts"],
     queryFn: () => fetchData({ url: "/posts" }),
+  });
+};
+
+export const usePostPost = () => {
+  return useMutation({
+    mutationKey: ["posts/postPost"],
+    mutationFn: (post: {
+      content: string;
+      imageUrl: string;
+      userId: number;
+    }) => fetchData({ url: "/posts", method: "POST", data: post }),
   });
 };
 

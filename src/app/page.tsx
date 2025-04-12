@@ -1,16 +1,21 @@
 "use client";
-import Post from "@/components/Post";
-import Tiptap from "@/components/Tiptap";
+import { useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
-import Tooltip from "@/components/Tooltip";
-import { useGetPosts } from "@/hooks/posts";
+import { useGetPosts, usePostPost } from "@/hooks/posts";
 import { formatTime } from "@/utils/time";
+import Post from "@/components/Post";
+import Tooltip from "@/components/Tooltip";
+import Tiptap from "@/components/Tiptap";
 
 export default function Home() {
   const { data: postsData } = useGetPosts();
   const { data: session } = useSession();
+  const { mutate: postPost } = usePostPost();
+  const queryClient = useQueryClient();
+  const tiptapRef = useRef<any>(null);
   if (session) {
     return (
       <div className="pt-20 items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
@@ -37,7 +42,22 @@ export default function Home() {
                 width={48}
                 height={48}
               />
-              <Tiptap />
+              <Tiptap
+                ref={tiptapRef}
+                onSubmit={(content) => {
+                  postPost(
+                    { content, imageUrl: "", userId: 1 },
+                    {
+                      onSuccess: () => {
+                        tiptapRef.current.clearContent();
+                        queryClient.invalidateQueries({
+                          queryKey: ["posts/getPosts"],
+                        });
+                      },
+                    }
+                  )
+                }}
+              />
             </div>
           </div>
           {postsData?.map((post) => (
