@@ -172,7 +172,7 @@ export default function PostDetail({
                         </p>
                       </div>
                     </div>
-                    <div className="overflow-auto flex-1">
+                    <div className="overflow-auto flex-1 flex flex-col gap-4">
                       {comments.map((comment) => (
                         <div key={comment.id} className="flex gap-4">
                           <div className="flex items-center gap-3">
