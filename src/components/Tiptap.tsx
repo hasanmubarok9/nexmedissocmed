@@ -19,7 +19,13 @@ const uploadImage = async (file: File): Promise<string> => {
   return URL.createObjectURL(file); // Mock: just local blob
 };
 
-export default function Tiptap() {
+export default function Tiptap({
+  placeholder,
+  isUploadImage = false,
+}: {
+  placeholder?: string;
+  isUploadImage?: boolean;
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
@@ -29,7 +35,7 @@ export default function Tiptap() {
       Image,
       StarterKit,
       Placeholder.configure({
-        placeholder: "Write something...",
+        placeholder: placeholder || "Write something...",
       }),
       CharacterCount.configure({
         limit,
@@ -61,7 +67,7 @@ export default function Tiptap() {
 
   return (
     <div className="w-full">
-      <EditorContent editor={editor} className="w-full" />
+      <EditorContent editor={editor} className="w-full text-gray-900 font-normal leading-snug" />
       <div className="flex items-center justify-between mt-2">
         <div
           className={`character-count ${
@@ -86,23 +92,25 @@ export default function Tiptap() {
           </svg>
           {editor.storage.characterCount.characters()} / {limit} characters
         </div>
-        <div className="flex items-center gap-2">
-          <Tooltip text="Upload Image">
-            <button
-              className="p-1 cursor-pointer rounded-md"
-              onClick={() => inputRef.current?.click()}
-            >
-              <PhotoIcon className="w-6 h-6" />
-            </button>
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageUpload}
-            />
-          </Tooltip>
-        </div>
+        {isUploadImage && (
+          <div className="flex items-center gap-2">
+            <Tooltip text="Upload Image">
+              <button
+                className="p-1 cursor-pointer rounded-md"
+                onClick={() => inputRef.current?.click()}
+              >
+                <PhotoIcon className="w-6 h-6" />
+              </button>
+              <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+            </Tooltip>
+          </div>
+        )}
       </div>
     </div>
   );

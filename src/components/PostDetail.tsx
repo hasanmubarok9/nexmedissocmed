@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ChatBubbleOvalLeftIcon } from "@heroicons/react/24/outline";
 import { Comment } from "@/hooks/posts";
 import { formatTime } from "@/utils/time";
+import Tiptap from "./Tiptap";
 
 export default function PostDetail({
   image,
@@ -171,30 +172,38 @@ export default function PostDetail({
                         </p>
                       </div>
                     </div>
-                    {comments.map((comment) => (
-                      <div key={comment.id} className="flex gap-4">
-                        <div className="flex items-center gap-3">
-                          <Image
-                            src="https://pagedone.io/asset/uploads/1704092147.png"
-                            alt="profile picture"
-                            className="w-12 h-12"
-                            width={48}
-                            height={48}
-                          />
+                    <div className="overflow-auto flex-1">
+                      {comments.map((comment) => (
+                        <div key={comment.id} className="flex gap-4">
+                          <div className="flex items-center gap-3">
+                            <Image
+                              src="https://pagedone.io/asset/uploads/1704092147.png"
+                              alt="profile picture"
+                              className="w-12 h-12"
+                              width={48}
+                              height={48}
+                            />
+                          </div>
+                          <div className="flex flex-col gap-2">
+                            <p className="text-gray-900 text-sm font-normal leading-snug">
+                              <span className="font-semibold">
+                                {comment.user.name}
+                              </span>{" "}
+                              {comment.content}
+                            </p>
+                            <p className="text-gray-500 text-xs font-normal leading-4">
+                              {formatTime(comment.createdAt)}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex flex-col gap-2">
-                          <p className="text-gray-900 text-sm font-normal leading-snug">
-                            <span className="font-semibold">
-                              {comment.user.name}
-                            </span>{" "}
-                            {comment.content}
-                          </p>
-                          <p className="text-gray-500 text-xs font-normal leading-4">
-                            {formatTime(comment.createdAt)}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                    <div className="">
+                      <Tiptap
+                        placeholder="Add a comment..."
+                        isUploadImage={false}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
