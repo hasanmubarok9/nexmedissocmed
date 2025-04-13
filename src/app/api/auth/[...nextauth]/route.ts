@@ -24,56 +24,6 @@ export const authOptions: NextAuthOptions = {
             clientId: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         }),
-        CredentialsProvider({
-            id: "credentials",
-            name: "Credentials",
-            credentials: {
-                email: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" }
-            },
-            async authorize(credentials) {
-                try {
-                    console.log("Authorize function called with credentials:", credentials);
-                    console.log("API URL:", `${process.env.NEXT_PUBLIC_API_URL}/auth/signin`);
-                    
-                    // Log request payload
-                    const requestPayload = {
-                        email: credentials?.email,
-                        password: credentials?.password,
-                    };
-                    console.log("Request payload:", requestPayload);
-                    
-                    // Call your auth API endpoint here
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
-                        method: "POST",
-                        body: JSON.stringify(requestPayload),
-                        headers: { "Content-Type": "application/json" }
-                    });
-                    
-                    console.log("Response status:", res.status);
-                    
-                    const data = await res.json();
-                    console.log("API response data:", data);
-                    
-                    if (res.ok && data) {
-                        // Format user object correctly for NextAuth
-                        return {
-                            id: data.user.id.toString(),
-                            name: data.user.name,
-                            email: data.user.email,
-                            image: data.user.image,
-                            accessToken: data.accessToken
-                        };
-                    }
-                    
-                    console.log("Authorization failed: res.ok =", res.ok);
-                    return null;
-                } catch (error) {
-                    console.error("Auth error:", error);
-                    return null;
-                }
-            }
-        }),
     ],
     session: {
         strategy: "jwt" as const,

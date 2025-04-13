@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSignin } from "@/hooks/auth";
 
 export default function SignIn() {
   const router = useRouter();
@@ -11,6 +11,7 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { mutate: signIn } = useSignin();
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,26 +20,16 @@ export default function SignIn() {
       setIsLoading(true);
       setError("");
       
-      console.log("Signing in with:", { email, password });
-      
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false
+      signIn({ email, password }, {
+        onSuccess: (response) => {
+          localStorage.setItem("token", response.accessToken);
+          router.push("/");
+        },
+        onError: (error) => {
+          setError(`Authentication failed: ${error.message}`);
+        }
       });
-      
-      console.log("Sign in result:", result);
-      
-      if (result?.error) {
-        console.error("Sign in error details:", result.error);
-        setError(`Authentication failed: ${result.error}`);
-      } else if (result?.ok) {
-        router.push("/");
-      } else {
-        setError("Unknown authentication error");
-      }
     } catch (err) {
-      console.error("Sign in error:", err);
       setError("An error occurred during sign in");
     } finally {
       setIsLoading(false);

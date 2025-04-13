@@ -10,9 +10,9 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     async (config) => {
-        const session = await getSession();
-        if (session?.accessToken) {
-            config.headers.Authorization = `Bearer ${session.accessToken}`;
+        const token = localStorage.getItem("token");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
     },
@@ -27,6 +27,7 @@ instance.interceptors.response.use(
     },
     (error: any) => {
         if (error.response?.status === 401) {
+            localStorage.removeItem("token");
             window.location.href = "/signin";
         }
         return Promise.reject(error);

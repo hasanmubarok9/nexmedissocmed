@@ -1,8 +1,8 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { ArrowRightEndOnRectangleIcon } from "@heroicons/react/24/outline";
 import { useGetPosts, usePostPost } from "@/hooks/posts";
 import { formatTime } from "@/utils/time";
@@ -11,19 +11,27 @@ import Tooltip from "@/components/Tooltip";
 import Tiptap from "@/components/Tiptap";
 
 export default function Home() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { data: postsData } = useGetPosts();
-  const { data: session } = useSession();
   const { mutate: postPost } = usePostPost();
   const queryClient = useQueryClient();
   const tiptapRef = useRef<any>(null);
-  if (session) {
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  if (isAuthenticated) {
     return (
       <div className="pt-20 items-center justify-items-center min-h-screen font-[family-name:var(--font-geist-sans)]">
         <main className="w-xl mx-auto flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
           <div className="w-full flex flex-col gap-4 sticky top-0 bg-white p-4">
             <div className="flex items-center justify-between w-full">
               <h1 className="text-gray-900 text-md font-medium leading-snug pb-0.5">
-                Hi {session.user?.name}
+                Hi You..
               </h1>
               <Tooltip text="Sign Out">
                 <button
@@ -55,7 +63,7 @@ export default function Home() {
                         });
                       },
                     }
-                  )
+                  );
                 }}
               />
             </div>
@@ -76,13 +84,20 @@ export default function Home() {
       </div>
     );
   } else {
-    <div className="flex items-center justify-center h-screen">
-      <div className="flex flex-col items-center justify-center">
-        <h1 className="text-gray-900 text-md font-medium leading-snug pb-0.5">
-          Welcome to the Nexmedis Social Media
-        </h1>
-        <button onClick={() => signIn()}>Sign In</button>
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <h1 className="text-gray-900 text-md font-medium leading-snug pb-0.5">
+            Welcome to the Nexmedis Social Media
+          </h1>
+          <button
+            className="cursor-pointer bg-gray-900 text-white px-4 py-2 rounded-md"
+            onClick={() => signIn()}
+          >
+            Sign In
+          </button>
+        </div>
       </div>
-    </div>
+    );
   }
 }
