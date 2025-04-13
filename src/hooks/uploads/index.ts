@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { fetchData } from "@/utils/api";
 
 export const useGetPresignedUrl = () => {
@@ -10,7 +10,11 @@ export const useGetPresignedUrl = () => {
         }: {
             fileExtension: string;
             contentType: string;
-        }) => fetchData({
+        }) => fetchData<{
+            presignedUrl: string;
+            key: string;
+            imageUrl: string;
+        }>({
             url: "/uploads/presigned-url",
             method: "POST",
             data: {
@@ -21,3 +25,13 @@ export const useGetPresignedUrl = () => {
     });
 };
 
+export const useGetPresignedUrlForView = (key: string) => {
+    return useQuery({
+        queryKey: ["uploads/getPresignedUrlForView"],
+        queryFn: () => fetchData<{
+            url: string;
+        }>({
+            url: `/uploads/presigned-url-for-view/${key}`,
+        }),
+    });
+};

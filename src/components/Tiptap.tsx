@@ -9,15 +9,26 @@ import Text from "@tiptap/extension-text";
 import Placeholder from "@tiptap/extension-placeholder";
 import CharacterCount from "@tiptap/extension-character-count";
 import { PhotoIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
+import { useGetPresignedUrl, useGetPresignedUrlForView } from "@/hooks/uploads";
 import Tooltip from "./Tooltip";
 
 const limit = 100;
 
-const uploadImage = async (file: File): Promise<string> => {
-  // Replace with real upload logic (e.g., to S3, Cloudinary)
-  await new Promise((r) => setTimeout(r, 1000));
-  return URL.createObjectURL(file); // Mock: just local blob
-};
+// const uploadImage = async (file: File): Promise<string> => {
+//   // Replace with real upload logic (e.g., to S3, Cloudinary)
+//   // await new Promise((r) => setTimeout(r, 1000));
+//   // return URL.createObjectURL(file); // Mock: just local blob
+
+//   const { mutate: getPresignedUrl } = useGetPresignedUrl();
+//   const data = getPresignedUrl({
+//     fileExtension: file.type.split("/")[1],
+//     contentType: file.type,
+//   });
+
+//   console.log("nilai data: ", data);
+  
+//   return "";
+// };
 
 export default function Tiptap({
   placeholder,
@@ -35,6 +46,8 @@ export default function Tiptap({
   useImperativeHandle(ref, () => ({
     clearContent: () => editor?.commands.clearContent(),
   }));
+
+  const { mutate: getPresignedUrl } = useGetPresignedUrl();
 
   const editor = useEditor({
     extensions: [
@@ -61,14 +74,33 @@ export default function Tiptap({
     const file = event.target.files?.[0];
     if (!file || !editor) return;
 
-    const url = await uploadImage(file);
-    editor
-      .chain()
-      .focus()
-      .setImage({ src: url })
-      .createParagraphNear()
-      .focus()
-      .run();
+    const fileExtension = file.type.split("/")[1];
+    const contentType = file.type;
+
+    console.log("nilai fileExtension: ", fileExtension);
+    console.log("nilai contentType: ", contentType);
+    
+    getPresignedUrl({
+      fileExtension: fileExtension,
+      contentType: contentType,
+    }, {
+      onSuccess: async (data) => {
+        console.log("nilai data: ", data);
+        const presignedUrlData = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/uploads/presigned-url/${encodeURIComponent(data.key)}`)
+        const { url } = await presignedUrlData.json();
+        console.log("nilai url: ", url);
+        editor
+          .chain()
+          .focus()
+          .setImage({ src: "https://example.com/foobar.png" })
+          .createParagraphNear()
+          .focus()
+          .run();
+      },
+      onError: (error) => {
+        console.log("nilai error: ", error);
+      },
+    });
   };
 
   if (!editor) return null;
