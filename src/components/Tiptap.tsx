@@ -76,19 +76,14 @@ export default function Tiptap({
 
     const fileExtension = file.type.split("/")[1];
     const contentType = file.type;
-
-    console.log("nilai fileExtension: ", fileExtension);
-    console.log("nilai contentType: ", contentType);
     
     getPresignedUrl({
       fileExtension: fileExtension,
       contentType: contentType,
     }, {
       onSuccess: async (data) => {
-        console.log("nilai data: ", data);
         const presignedUrlData = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/uploads/presigned-url/${encodeURIComponent(data.key)}`)
         const { url } = await presignedUrlData.json();
-        console.log("nilai url: ", url);
         editor
           .chain()
           .focus()
@@ -98,7 +93,7 @@ export default function Tiptap({
           .run();
       },
       onError: (error) => {
-        console.log("nilai error: ", error);
+        console.error("Error uploading image:", error);
       },
     });
   };
