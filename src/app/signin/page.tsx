@@ -15,25 +15,31 @@ export default function SignIn() {
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     try {
       setIsLoading(true);
       setError("");
-      
-      signIn({ email, password }, {
-        onSuccess: (response) => {
-          localStorage.setItem("token", response.accessToken);
-          router.push("/");
-        },
-        onError: (error) => {
-          setError(`Authentication failed: ${error.message}`);
+
+      signIn(
+        { email, password },
+        {
+          onSuccess: (response) => {
+            setIsLoading(false);
+            localStorage.setItem("token", response.accessToken);
+            router.push("/");
+          },
+          onError: (error) => {
+            setError(`Authentication failed: ${error.message}`);
+            setIsLoading(false);
+          },
         }
-      });
+      );
     } catch (err) {
       setError("An error occurred during sign in");
-    } finally {
       setIsLoading(false);
     }
+
+    return;
   };
 
   return (
@@ -47,13 +53,13 @@ export default function SignIn() {
           <header className="mb-4 text-center">
             <h3 className="text-xl font-medium text-slate-700">Login</h3>
           </header>
-          
+
           {error && (
             <div className="mb-4 p-2 text-sm text-red-500 bg-red-50 rounded">
               {error}
             </div>
           )}
-          
+
           <div className="flex flex-col space-y-8">
             {/*      <!-- Input field --> */}
             <div className="relative my-4">
