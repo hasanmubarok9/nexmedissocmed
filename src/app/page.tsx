@@ -76,15 +76,13 @@ export default function Home() {
       </div>
     );
   } else {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <button
-          className="bg-gray-100 p-2 cursor-pointer rounded-md"
-          onClick={() => signIn()}
-        >
-          Sign In
-        </button>
+    <div className="flex items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-gray-900 text-md font-medium leading-snug pb-0.5">
+          Welcome to the Nexmedis Social Media
+        </h1>
+        <button onClick={() => signIn()}>Sign In</button>
       </div>
-    );
+    </div>
   }
 }
