@@ -45,7 +45,7 @@ export default function Post({
         </div>
       </div>
       <div>
-        <img src={image} alt={name} />
+        <img src={image} alt={name || "image"} />
       </div>
       <div className="flex flex-col gap-1">
         <p className="text-gray-900 text-sm font-normal leading-snug pb-0.5">

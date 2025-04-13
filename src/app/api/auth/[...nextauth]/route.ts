@@ -33,7 +33,6 @@ export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async jwt({ token, user }: { token: JWT, user: any }) {
-            console.log("JWT callback - token:", token, "user:", user);
             if (user) {
                 token.accessToken = user.accessToken;
                 // Add user ID to token
@@ -42,7 +41,6 @@ export const authOptions: NextAuthOptions = {
             return token;
         },
         async session({ session, token }: { session: Session, token: JWT }) {
-            console.log("Session callback - session:", session, "token:", token);
             session.accessToken = token.accessToken as string;
             // Add user ID to session for client access
             session.user = {
